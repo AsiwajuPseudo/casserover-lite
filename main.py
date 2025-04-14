@@ -335,9 +335,8 @@ def admin_delete_user(decoded_token):
     
 # Admin views all users in their lawfirm
 @app.route('/org_users', methods=['GET'])
-@auth.jwt_required(required_role="org_admin")
-def get_org_users(decoded_token):
-    admin_id = decoded_token.get('admin_id')
+def get_org_users():
+    admin_id = request.args.get('admin_id')
     result = database.get_org_users(admin_id)
     results=[item for item in result['users'] if item['user_id']!=admin_id]
     return results
