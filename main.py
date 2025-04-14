@@ -300,10 +300,9 @@ def get_user_usage(decoded_token):
 
 # Admin adds a new user to their lawfirm
 @app.route('/admin_add_user', methods=['POST'])
-@auth.jwt_required(required_role="org_admin") # Added decorator
-def admin_add_user(decoded_token):
+def admin_add_user():
     data = request.get_json()
-    admin_id = decoded_token['admin_id']
+    admin_id = data.get('admin_id')
     name = data.get('name')
     email = data.get('email')
     phone = data.get('phone')
