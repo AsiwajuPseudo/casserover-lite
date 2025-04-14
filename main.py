@@ -318,11 +318,10 @@ def admin_add_user():
         return result
     
 # Admin deletes a user from their lawfirm
-@app.route('/admin_delete_user', methods=['DELETE'])
-@auth.jwt_required(required_role="org_admin")
-def admin_delete_user(decoded_token):
+@app.route('/admin_delete_user', methods=['POST'])
+def admin_delete_user():
     data = request.get_json()
-    admin_id = decoded_token.get('admin_id')
+    admin_id = data.get('admin_id')
     user_id_to_delete = data.get('user_id')
     
     delete = database.admin_delete_user(admin_id, user_id_to_delete)
