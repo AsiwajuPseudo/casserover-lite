@@ -23,6 +23,10 @@ class Database:
                               (user_id TEXT, file_id TEXT, filename TEXT, table_id TEXT, table_ TEXT, citation TEXT)''')
         cursor.execute('''CREATE TABLE IF NOT EXISTS superusers
                               (admin_id TEXT, name TEXT, email TEXT, password TEXT, created_at TEXT)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS ad_views
+                              (ad_id TEXT, user_id TEXT, chat_id TEXT, viewed_at TEXT)''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS ad_leads
+                              (ad_id TEXT, user_id TEXT, name TEXT, email TEXT, phone TEXT, status TEXT, created_at TEXT)''')
 
         conn.commit()
         
@@ -916,13 +920,60 @@ class Database:
     def add_ad_lead(self, ad_id, user_id, name, email, phone):
         current_datetime = datetime.now()
         viewed_at = str(current_datetime.date())
+        status="open"
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 
-                cursor.execute("INSERT INTO ad_leads (ad_id, user_id, name, email, phone, viewed_at) VALUES (?,?,?,?,?,?)",
-                                   (ad_id, user_id, name, email, phone, viewed_at))
+                cursor.execute("INSERT INTO ad_leads (ad_id, user_id, name, email, phone, status, created_at) VALUES (?,?,?,?,?,?,?)",
+                                   (ad_id, user_id, name, email, phone, status, viewed_at))
                 conn.commit()
                 return {"status": "success"}
+        except Exception as e:
+            return {"status": "Error: " + str(e)}
+
+
+    #open ad views for an advertiser
+    def open_ad_views(self, ad_id):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM ad_views WHERE ad_id=? ", (ad_id,))
+                views_pre = cursor.fetchall()
+                views=[]
+                for ad in views_pre:
+                    views.append({"user_id":ad[1],"chat_id":ad[2],"viewed_at":ad[3]})
+
+                return views
+        except Exception as e:
+            print("error: "+str(e))
+            return []
+
+    #open ad leads for an advertiser
+    def open_ad_leads(self, ad_id):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM ad_leads WHERE ad_id=? ", (ad_id,))
+                leads_pre = cursor.fetchall()
+                leads=[]
+                for ad in leads_pre:
+                    #ad_id, user_id, name, email, phone, status, viewed_at
+                    leads.append({"user_id":ad[1],"name":ad[2],"email":ad[3],"phone":ad[4],"status":ad[5]"created_at":ad[6]})
+
+                return leads
+        except Exception as e:
+            print("error: "+str(e))
+            return []
+
+
+    #close a lead
+    def close_lead(self, ad_id, user_id):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute("UPDATE ad_leads SET status='closed' WHERE ad_id=? AND user_id=?", (ad_id, user_id))
+                conn.commit()
+                return {'status':'success'}
         except Exception as e:
             return {"status": "Error: " + str(e)}
