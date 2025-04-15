@@ -959,7 +959,7 @@ class Database:
                 leads=[]
                 for ad in leads_pre:
                     #ad_id, user_id, name, email, phone, status, viewed_at
-                    leads.append({"user_id":ad[1],"name":ad[2],"email":ad[3],"phone":ad[4],"status":ad[5]"created_at":ad[6]})
+                    leads.append({"user_id":ad[1],"name":ad[2],"email":ad[3],"phone":ad[4],"status":ad[5],"created_at":ad[6]})
 
                 return leads
         except Exception as e:
