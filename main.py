@@ -502,8 +502,8 @@ def run_assist(decoded_token):
 #retrieve all ads for an advertiser
 @app.route('/ads', methods=['GET'])
 def show_ads():
-  user=request.form.get('user_id')
-  ad_id=request.form.get('ad_id')
+  user=request.args.get('user_id')
+  ad_id=request.args.get('ad_id')
   views=database.open_ad_views(ad_id)
 
   return {"views":views}
