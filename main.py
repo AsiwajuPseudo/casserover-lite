@@ -444,7 +444,7 @@ def run_playground(decoded_token):
     ads=Ads()
     ad=ads.random_advertiser()
     #add ad to viewership
-    add_ad=database.add_ad_view(ad['id'], user_id, chat)
+    add_ad=database.add_ad_view(ad['id'], user, chat)
   except Exception as e:
     traceback.print_exc()
     p={"answer":[{"type":"paragraph","data":"Error generating content, please try again. If the error persist create a new workspace."}],"sources":[], "citations":[]}
