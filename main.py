@@ -443,6 +443,8 @@ def run_playground(decoded_token):
     answer, sources = rag.single_step(prompt, history, 3, 3)
     ads=Ads()
     ad=ads.random_advertiser()
+    #add ad to viewership
+    add_ad=database.add_ad_view(ad['id'], user_id, chat)
   except Exception as e:
     traceback.print_exc()
     p={"answer":[{"type":"paragraph","data":"Error generating content, please try again. If the error persist create a new workspace."}],"sources":[], "citations":[]}
@@ -496,6 +498,24 @@ def run_assist(decoded_token):
   chats = database.chats(user)
 
   return {"messages": messages, "chats": chats, "current": chat}
+
+#retrieve all ads for an advertiser
+@app.route('/ads', methods=['GET'])
+def show_ads():
+  user=request.form.get('user_id')
+  ad_id=request.form.get('ad_id')
+  views=database.open_ad_views(ad_id)
+
+  return {"views":views}
+
+#retrieve all leads for an advertiser
+@app.route('/leads', methods=['GET'])
+def show_leads():
+  user=request.args.get('user_id')
+  ad_id=request.args.get('ad_id')
+  leads=database.open_ad_leads(ad_id)
+
+  return {"leads":leads}
 
 
 #upload files for GPT
