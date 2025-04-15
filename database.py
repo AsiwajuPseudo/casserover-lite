@@ -891,3 +891,23 @@ class Database:
                 return {"status": "success", "users": usage_data}
         except Exception as e:
             return {"status": "Error: " + str(e)}
+
+
+
+    #-----------------------------ADS--------------------------------
+
+
+    # Add a view
+    def add_ad_view(self, ad_id, user_id, chat_id):
+        current_datetime = datetime.now()
+        viewed_at = str(current_datetime.date())
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("INSERT INTO ad_views (ad_id, user_id, chat_id, viewed_at) VALUES (?,?,?,?)",
+                                   (ad_id, user_id, chat_id, viewed_at))
+                conn.commit()
+                return {"status": "success"}
+        except Exception as e:
+            return {"status": "Error: " + str(e)}
