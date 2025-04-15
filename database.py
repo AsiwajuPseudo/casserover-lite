@@ -911,3 +911,18 @@ class Database:
                 return {"status": "success"}
         except Exception as e:
             return {"status": "Error: " + str(e)}
+
+    # Add a lead
+    def add_ad_lead(self, ad_id, user_id, name, email, phone):
+        current_datetime = datetime.now()
+        viewed_at = str(current_datetime.date())
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("INSERT INTO ad_leads (ad_id, user_id, name, email, phone, viewed_at) VALUES (?,?,?,?,?,?)",
+                                   (ad_id, user_id, name, email, phone, viewed_at))
+                conn.commit()
+                return {"status": "success"}
+        except Exception as e:
+            return {"status": "Error: " + str(e)}
