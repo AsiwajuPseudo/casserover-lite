@@ -527,6 +527,15 @@ def new_lead():
   add_lead=database.add_ad_lead(ad_id, user_id, profile['name'], profile['email'], profile['phone'])
   return add_lead
 
+#close lead
+@app.route('/close_lead', methods=['POST'])
+def close_lead():
+  data = request.get_json()
+  user_id = data.get('user_id')
+  ad_id = data.get('ad_id')
+  lead=database.close_lead(ad_id, user_id)
+  return lead
+
 
 #upload files for GPT
 @app.route('/cloudupload', methods=['POST'])
