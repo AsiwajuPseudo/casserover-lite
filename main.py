@@ -306,7 +306,7 @@ def load_all_ads():
   ads=Ads()
   ad=ads.advertisers
   for a in ad:
-    ad['views']=len(database.open_ad_views(a['id']))
+    a['views']=len(database.open_ad_views(a['id']))
   return {'ads': ad}
 
 
