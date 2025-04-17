@@ -294,6 +294,19 @@ def get_user_usage(decoded_token):
   return result
 
 
+# Get advertisements
+@app.route('/all_ads', methods=['GET'])
+def load_all_ads():
+  admin_id = request.args.get('admin_id')
+  
+  superuser_check = database.get_superusers(admin_id)
+  if superuser_check.get("status") != "success":
+    return {"status": "Unauthorized access! Superusers only."}, 403
+  #return all advertisers
+  ads=Ads()
+  return {'ads': ads.advertisers}
+
+
 #---------------------------------------------------------------------------------------------------------------
 
 # ADMIN USER MANAGEMENT
