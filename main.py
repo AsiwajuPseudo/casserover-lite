@@ -304,7 +304,10 @@ def load_all_ads():
     return {"status": "Unauthorized access! Superusers only."}, 403
   #return all advertisers
   ads=Ads()
-  return {'ads': ads.advertisers}
+  ad=ads.advertisers
+  for a in ad:
+    ad['views']=len(database.open_ad_views(a['id']))
+  return {'ads': ad}
 
 
 #---------------------------------------------------------------------------------------------------------------
